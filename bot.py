@@ -27,6 +27,29 @@ async def upload(b):
 class BotClient(discord.Client):
     async def on_ready(self):
         print('Ready to swing the hammer as', self.user)
+    
+    async def on_member_ban(self, guild: discord.Guild, member: discord.Member):
+        sys_channel = guild.system_channel
+        # No system channel, so don't continue
+        if not sys_channel:
+            return
+
+        # Check the bot's permissions to make sure it can post images
+        permissions = sys_channel.permissions_for(guild.me)
+        if not (permissions.read_messages and permissions.send_messages and permissions.embed_links):
+            return
+        
+        # Generate the image in an executor because PIL is blocking
+        image = await self.loop.run_in_executor(None, generator.image_gen, member.name)
+
+        # Upload the image to Imgur
+        url = await upload(image)
+
+        # Send the message to Discord
+        if url:
+            embed = discord.Embed()
+            embed.set_image(url=url)
+            await sys_channel.send(f'**{member.name} has been smitten by Tom Scott\'s Banhammer**', embed=embed)
 
 client = BotClient()
 client.run(config['token'])
