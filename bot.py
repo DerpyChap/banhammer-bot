@@ -10,18 +10,23 @@ with open('config.json') as j:
 
 async def upload(b):
     """Upload stuff to Imgur because the GIFs are like 1 MB too large for Discord"""
+    # Setup the fields and shit
     data = aiohttp.FormData(quote_fields=False)
     data.add_field('image',
                     b,
                     filename='banned.gif',
                     content_type='image/gif')
     async with aiohttp.ClientSession() as session:
+        # Upload
         async with session.post('https://api.imgur.com/3/image', data=data, headers={'Authorization': f'Client-ID {config["client_id"]}'}) as resp:
             if resp.status != 200:
+                # Ah fuck
                 return
             d = await resp.json()
             if d['success']:
+                # Woohoo!
                 return d['data']['link']
+            # Ah fuck
             return
 
 class BotClient(discord.Client):
