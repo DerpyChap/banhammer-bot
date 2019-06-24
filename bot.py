@@ -16,7 +16,7 @@ async def upload(b):
                     filename='banned.gif',
                     content_type='image/gif')
     async with aiohttp.ClientSession() as session:
-        async with session.post('https://api.imgur.com/3/image', data=data, headers={'Authorization': config['client_id']}) as resp:
+        async with session.post('https://api.imgur.com/3/image', data=data, headers={'Authorization': f'Client-ID {config["client_id"]}'}) as resp:
             if resp.status != 200:
                 return
             d = await resp.json()
