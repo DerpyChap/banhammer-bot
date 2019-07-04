@@ -11,7 +11,7 @@ The bot uses the Imgur Anonymous API for uploading the generated GIFs, so we'll 
 Download the bot using either `git clone` or by downloading and extracting the ZIP, and then upen up a Terminal/PowerShell window and `cd` into the `banhammer-bot` folder. Then install the requirements listed in `requirements.txt`:
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 (If your OS comes with Python 2 preinstalled then replace `pip` with `pip3`)
